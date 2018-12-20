@@ -305,7 +305,7 @@ func init() {
 		if messageFile, err := os.Open(messageFileName); err != nil {
 			zlog.Fatal(err)
 		} else {
-			buf := make([]byte, 1024)
+			buf := make([]byte, 1024 * 100)
 			n, err := messageFile.Read(buf)
 			config.SendData = true
 			config.Data = buf[0:n]
