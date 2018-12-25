@@ -38,7 +38,7 @@ import (
 	"github.com/zmap/zgrab/ztools/smb"
 	"github.com/zmap/zgrab/ztools/telnet"
 	"github.com/zmap/zgrab/ztools/xssh"
-	"github.com/zmap/zgrab/ztools/zlog"
+	// "github.com/zmap/zgrab/ztools/zlog"
 )
 
 var ErrRedirLocalhost = errors.New("Redirecting to Localhost")
@@ -316,14 +316,15 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		var req *http.Request
 		var resp *http.Response
 
-		switch config.HTTP.Method {
-		case "GET":
-			req, err = http.NewRequestWithHost("GET", fullURL, httpHost, nil)
-		case "HEAD":
-			req, err = http.NewRequestWithHost("HEAD", fullURL, httpHost, nil)
-		default:
-			zlog.Fatalf("Bad HTTP Method: %s. Valid options are: GET, HEAD.", config.HTTP.Method)
-		}
+		// switch config.HTTP.Method {
+		// case "GET":
+		// 	req, err = http.NewRequestWithHost("GET", fullURL, httpHost, nil)
+		// case "HEAD":
+		// 	req, err = http.NewRequestWithHost("HEAD", fullURL, httpHost, nil)
+		// default:
+		// 	zlog.Fatalf("Bad HTTP Method: %s. Valid options are: GET, HEAD.", config.HTTP.Method)
+		// }
+		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, nil)
 
 		for _, s := range strings.Split(config.HTTP.Headers, "\r\n") {
 			arr := strings.SplitN(s, ":", 2)
