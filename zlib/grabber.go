@@ -236,8 +236,8 @@ func redirectsToLocalhost(host string) bool {
 	return false
 }
 
-func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, string) error {
-	g := func(urlHost, endpoint, httpHost string) (err error) {
+func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, string, string) error {
+	g := func(urlHost, endpoint, httpHost string, addr string) (err error) {
 
 		var tlsConfig *tls.Config
 		if config.TLS {
@@ -329,7 +329,15 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		for _, s := range strings.Split(config.HTTP.Headers, "\r\n") {
 			arr := strings.SplitN(s, ":", 2)
 			if len(arr) == 2 {
-				req.Header.Set(strings.TrimSpace(arr[0]), strings.TrimSpace(arr[1]))
+				hdrName := strings.TrimSpace(arr[0]);
+				hdrValue := strings.TrimSpace(arr[1]);
+
+				// replace placeholders with target domain/ip data
+				// %s => ip address
+				// %d => domain
+				hdrValue = strings.Replace(hdrValue, "%s", addr, -1)
+				hdrValue = strings.Replace(hdrValue, "%d", httpHost, -1)
+				req.Header.Set(hdrName, hdrValue)
 			}
 		}
 		if err == nil {
@@ -718,7 +726,7 @@ func GrabBanner(config *Config, target *GrabTarget) *Grab {
 			rhost = net.JoinHostPort(target.Addr.String(), port)
 		}
 
-		err := httpGrabber(rhost, config.HTTP.Endpoint, target.Domain)
+		err := httpGrabber(rhost, config.HTTP.Endpoint, target.Domain, target.Addr.String())
 
 		return &Grab{
 			IP:     target.Addr,
