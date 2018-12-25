@@ -326,20 +326,25 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		// }
 		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, nil)
 
-		for _, s := range strings.Split(config.HTTP.Headers, "\r\n") {
+		httpHeaders := config.HTTP.Headers;
+
+		if httpHeaders != "" {
+			// replace placeholders with target domain/ip data
+			// %s => ip address
+			// %d => domain
+			httpHeaders = strings.Replace(httpHeaders, "%s", addr, -1)
+			httpHeaders = strings.Replace(httpHeaders, "%d", httpHost, -1)
+		}
+
+		for _, s := range strings.Split(httpHeaders, "\\r\\n") {
 			arr := strings.SplitN(s, ":", 2)
 			if len(arr) == 2 {
 				hdrName := strings.TrimSpace(arr[0]);
 				hdrValue := strings.TrimSpace(arr[1]);
-
-				// replace placeholders with target domain/ip data
-				// %s => ip address
-				// %d => domain
-				hdrValue = strings.Replace(hdrValue, "%s", addr, -1)
-				hdrValue = strings.Replace(hdrValue, "%d", httpHost, -1)
 				req.Header.Set(hdrName, hdrValue)
 			}
 		}
+
 		if err == nil {
 			if req.Header.Get("Accept") == "" {
 				req.Header.Set("Accept", "*/*")
