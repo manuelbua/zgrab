@@ -22,6 +22,7 @@ import (
 	"net/http/httptrace"
 	"net/textproto"
 	"net/url"
+	// "os"
 	"strconv"
 	"strings"
 	"sync"
@@ -561,6 +562,13 @@ func (req *Request) write(w io.Writer, usingProxy bool, extraHeaders Header, wai
 		ruri = host
 	}
 	// TODO(bradfitz): escape at least newlines in ruri?
+
+	// Permit embedded requests such as "GET https://google.com"
+	if strings.HasSuffix(req.URL.Port(), "http:") {
+		// ruri = "http:" + req.URL.RequestURI()
+	} else if strings.HasSuffix(req.URL.Port(), "https:") {
+		ruri = "https://google.com"// + req.URL.RequestURI()
+	}
 
 	// Wrap the writer in a bufio Writer if it's not already buffered.
 	// Don't always call NewWriter, as that forces a bytes.Buffer
