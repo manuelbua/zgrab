@@ -74,7 +74,7 @@ var (
 )
 
 var (
-	defaultLogger = New(os.Stderr, "log")
+	defaultLogger = New(os.Stderr, "log", true)
 )
 
 func (level LogLevel) String() string {
@@ -91,7 +91,7 @@ func (level LogLevel) Color() color {
 	return colors[level]
 }
 
-func New(out io.Writer, prefix string) *Logger {
+func New(out io.Writer, prefix string, forceUseColor bool) *Logger {
 	useColor := false
 	file, ok := out.(*os.File)
 	if ok {
@@ -100,6 +100,9 @@ func New(out io.Writer, prefix string) *Logger {
 		if (stats.Mode() & os.ModeCharDevice) != 0 {
 			useColor = true
 		}
+	}
+	if forceUseColor {
+		useColor = forceUseColor
 	}
 	logger := Logger{
 		out:      out,

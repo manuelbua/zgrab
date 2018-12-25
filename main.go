@@ -334,7 +334,7 @@ func init() {
 			zlog.Fatal(err)
 		}
 	}
-	logger := zlog.New(logFile, "banner-grab")
+	logger := zlog.New(logFile, "banner-grab", true)
 	config.ErrorLog = logger
 
 	// Open TLS ClientHello, if applicable
