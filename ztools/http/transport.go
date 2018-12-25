@@ -21,6 +21,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -48,6 +49,9 @@ var DefaultTransport RoundTripper = &Transport{
 	TLSHandshakeTimeout:   10 * time.Second,
 	ExpectContinueTimeout: 1 * time.Second,
 }
+
+// match only one and consecutive numbers
+var reNumbersOnly = regexp.MustCompile("[0-9]+");
 
 // DefaultMaxIdleConnsPerHost is the default value of Transport's
 // MaxIdleConnsPerHost.
@@ -576,7 +580,8 @@ func (e *envOnce) reset() {
 }
 
 func (t *Transport) connectMethodForRequest(treq *transportRequest) (cm connectMethod, err error) {
-	if port := treq.URL.Port(); !validPort(port) {
+	port := safePort(treq.URL)
+	if !validPort(port) {
 		return cm, fmt.Errorf("invalid URL port %q", port)
 	}
 	cm.targetScheme = treq.URL.Scheme
@@ -1988,13 +1993,30 @@ var portMap = map[string]string{
 	"https": "443",
 }
 
+// returns a safe number-only port value for the specified URL
+// only the first matching sequence is considered
+//
+// this is done because the port value can be "ip:porthttps:"
+// if the endpoint is an URI itself as the GET parameter
+func safePort(url *url.URL) string {
+	var reNumbersOnly = regexp.MustCompile("[0-9]+");
+
+	portNumbers := reNumbersOnly.FindAllString(url.Port(), 1)
+	if len(portNumbers)<=0 {
+		fmt.Errorf("could not determine a valid URL port %q", url.Port())
+		os.Exit(1)
+	}
+
+	return portNumbers[0]
+}
+
 // canonicalAddr returns url.Host but always with a ":port" suffix
 func canonicalAddr(url *url.URL) string {
 	addr := url.Hostname()
 	if v, err := idnaASCII(addr); err == nil {
 		addr = v
 	}
-	port := url.Port()
+	port := safePort(url)
 	if port == "" {
 		port = portMap[url.Scheme]
 	}
