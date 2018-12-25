@@ -27,6 +27,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	// "os"
 
 	"github.com/zmap/zcrypto/tls"
 	"github.com/zmap/zgrab/ztools/ftp"
@@ -341,9 +342,15 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 			if len(arr) == 2 {
 				hdrName := strings.TrimSpace(arr[0]);
 				hdrValue := strings.TrimSpace(arr[1]);
+				// Overriding the "Host" header is not as other headers, crazy..
+				if hdrName == "Host" {
+					req.Host = hdrValue;
+				}
+				// fmt.Println(hdrName + ": " + hdrValue);
 				req.Header.Set(hdrName, hdrValue)
 			}
 		}
+		// os.Exit(1)
 
 		if err == nil {
 			if req.Header.Get("Accept") == "" {
