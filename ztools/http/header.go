@@ -301,7 +301,8 @@ func filterHeaders(h Header) {
 	for header, values := range h {
 		if _, ok := knownHeaders[FormatHeaderName(header)]; !ok {
 			unk := UnknownHeader{
-				Key:    FormatHeaderName(header),
+				// Key:    FormatHeaderName(header),
+				Key:    header,
 				Values: values,
 			}
 			unknownHeaders = append(unknownHeaders, unk)
@@ -328,10 +329,12 @@ func (h Header) MarshalJSON() ([]byte, error) {
 			for idx := range unknownHeader {
 				formatHeaderValues(unknownHeader[idx].Values)
 			}
-			headerMap[FormatHeaderName(k)] = unknownHeader
+			// headerMap[FormatHeaderName(k)] = unknownHeader
+			headerMap[k] = unknownHeader
 		} else {
 			formatHeaderValues(v)
-			headerMap[FormatHeaderName(k)] = v
+			// headerMap[FormatHeaderName(k)] = v
+			headerMap[k] = v
 		}
 	}
 
