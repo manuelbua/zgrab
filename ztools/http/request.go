@@ -565,10 +565,13 @@ func (req *Request) write(w io.Writer, usingProxy bool, extraHeaders Header, wai
 
 	// Permit embedded requests such as "GET https://google.com"
 	if strings.HasSuffix(req.URL.Port(), "http:") {
-		// ruri = "http:" + req.URL.RequestURI()
+		ruri = "http:" + req.URL.RequestURI()
 	} else if strings.HasSuffix(req.URL.Port(), "https:") {
-		ruri = "https://google.com"// + req.URL.RequestURI()
+		ruri = "https:" + req.URL.RequestURI()
 	}
+
+	// fmt.Println(ruri)
+	// os.Exit(1)
 
 	// Wrap the writer in a bufio Writer if it's not already buffered.
 	// Don't always call NewWriter, as that forces a bytes.Buffer
