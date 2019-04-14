@@ -290,6 +290,13 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 
 		var fullURL string
 
+		// replace endpoint placeholders with target domain/ip data
+		// %s => ip address
+		// %d => domain
+		endpoint = strings.Replace(endpoint, "%s", addr, -1)
+		endpoint = strings.Replace(endpoint, "%d", httpHost, -1)
+		// fmt.Println(endpoint);
+
 		if config.TLS {
 			fullURL = "https://" + urlHost + endpoint
 		} else {
@@ -325,12 +332,13 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		// default:
 		// 	zlog.Fatalf("Bad HTTP Method: %s. Valid options are: GET, HEAD.", config.HTTP.Method)
 		// }
+
 		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, nil)
 
 		httpHeaders := config.HTTP.Headers;
 
 		if httpHeaders != "" {
-			// replace placeholders with target domain/ip data
+			// replace value placeholders with target domain/ip data
 			// %s => ip address
 			// %d => domain
 			httpHeaders = strings.Replace(httpHeaders, "%s", addr, -1)
