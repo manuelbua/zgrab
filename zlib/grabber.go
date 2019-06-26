@@ -333,7 +333,15 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		// 	zlog.Fatalf("Bad HTTP Method: %s. Valid options are: GET, HEAD.", config.HTTP.Method)
 		// }
 
-		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, nil)
+		// handle request body
+		var http_body io.Reader = nil
+		if config.HTTP.HasBody {
+			// req.Body = ioutil.NopCloser(bytes.NewBuffer(config.HTTP.Body))
+			http_body = bytes.NewReader(config.HTTP.Body)
+			// req.Body = &config.HTTP.Body
+		}
+
+		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, http_body)
 
 		httpHeaders := config.HTTP.Headers;
 
