@@ -50,9 +50,6 @@ var DefaultTransport RoundTripper = &Transport{
 	ExpectContinueTimeout: 1 * time.Second,
 }
 
-// match only one and consecutive numbers
-var reNumbersOnly = regexp.MustCompile("[0-9]+");
-
 // DefaultMaxIdleConnsPerHost is the default value of Transport's
 // MaxIdleConnsPerHost.
 const DefaultMaxIdleConnsPerHost = 2
