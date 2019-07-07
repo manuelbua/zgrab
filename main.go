@@ -80,7 +80,7 @@ func init() {
 	flag.BoolVar(&config.Banners, "banners", false, "Read banner upon connection creation")
 	flag.StringVar(&messageFileName, "data", "", "Send a message and read response (%s will be replaced with destination IP)")
 	flag.StringVar(&config.HTTP.Endpoint, "http", "", "Send an HTTP request to an endpoint")
-	flag.StringVar(&httpBodyFileName, "http-body", "", "Set HTTP request body")
+	flag.StringVar(&httpBodyFileName, "http-body", "", "Read HTTP request body from the specified file")
 	flag.StringVar(&config.HTTP.Method, "http-method", "GET", "Set HTTP request method type")
 	flag.StringVar(&config.HTTP.Headers, "http-headers", "", "Replace all headers with this string. e.g. 'User-Agent:Mozilla/5.0 zgrab/0.x\r\nX-Ignore:test'")
 	flag.StringVar(&config.HTTP.UserAgent, "http-user-agent", "Mozilla/5.0 zgrab/0.x", "Set a custom HTTP user agent")
