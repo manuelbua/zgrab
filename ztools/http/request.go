@@ -23,6 +23,7 @@ import (
 	"net/textproto"
 	"net/url"
 	// "os"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -563,11 +564,13 @@ func (req *Request) write(w io.Writer, usingProxy bool, extraHeaders Header, wai
 	}
 	// TODO(bradfitz): escape at least newlines in ruri?
 
-	// Permit embedded requests such as "GET https://google.com"
-	if strings.HasSuffix(req.URL.Port(), "http:") {
-		ruri = "http:" + req.URL.RequestURI()
-	} else if strings.HasSuffix(req.URL.Port(), "https:") {
-		ruri = "https:" + req.URL.RequestURI()
+	// Permit requests such as "GET https://google.com" or
+	// "OPTIONS icap://icap.server.net/sample-service"
+	var reProto = regexp.MustCompile("(?:[0-9]+)([a-zA-Z]+:)")
+	protoMatches := reProto.FindStringSubmatch(req.URL.Port())
+	if len(protoMatches) > 1 {
+		// fmt.Println(protoMatches[1])
+		ruri = protoMatches[1] + req.URL.RequestURI()
 	}
 
 	// fmt.Println(ruri)
