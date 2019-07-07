@@ -343,6 +343,11 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 
 		req, err = http.NewRequestWithHost(config.HTTP.Method, fullURL, httpHost, http_body)
 
+		// apply specified proto name/maj/min
+		req.Protocol.Name = config.HTTP.ProtoName
+		req.Protocol.Major = config.HTTP.ProtoMaj
+		req.Protocol.Minor = config.HTTP.ProtoMin
+
 		httpHeaders := config.HTTP.Headers;
 
 		if httpHeaders != "" {

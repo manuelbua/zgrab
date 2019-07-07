@@ -583,7 +583,8 @@ func (req *Request) write(w io.Writer, usingProxy bool, extraHeaders Header, wai
 		w = bw
 	}
 
-	_, err = fmt.Fprintf(w, "%s %s HTTP/1.1\r\n", valueOrDefault(req.Method, "GET"), ruri)
+	// _, err = fmt.Fprintf(w, "%s %s HTTP/1.1\r\n", valueOrDefault(req.Method, "GET"), ruri)
+	_, err = fmt.Fprintf(w, "%s %s %s\r\n", valueOrDefault(req.Method, "GET"), ruri, req.Protocol.Name)
 	if err != nil {
 		return err
 	}
@@ -744,6 +745,10 @@ func ParseHTTPVersion(vers string) (major, minor int, ok bool) {
 		return 1, 1, true
 	case "HTTP/1.0":
 		return 1, 0, true
+	}
+	// ICAP/1.0 is roughly following HTTP/1.1
+	if strings.HasPrefix(vers, "ICAP/") {
+		return 1, 1, true
 	}
 	if !strings.HasPrefix(vers, "HTTP/") {
 		return 0, 0, false

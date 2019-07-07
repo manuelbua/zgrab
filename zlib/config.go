@@ -32,6 +32,9 @@ type HTTPConfig struct {
 	MaxSize                  int
 	MaxRedirects             int
 	FollowLocalhostRedirects bool
+	ProtoName                string
+	ProtoMaj                 int
+	ProtoMin                 int
 }
 
 type XSSHScanConfig struct {
