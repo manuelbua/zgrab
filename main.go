@@ -86,8 +86,8 @@ func init() {
 	flag.StringVar(&config.HTTP.UserAgent, "http-user-agent", "Mozilla/5.0 zgrab/0.x", "Set a custom HTTP user agent")
 	flag.StringVar(&config.HTTP.ProxyDomain, "http-proxy-domain", "", "Send a CONNECT <domain> first")
 	flag.StringVar(&config.HTTP.ProtoName, "http-proto-name", "HTTP/1.1", "The protocol name to use in the HTTP request line")
-	flag.IntVar(&config.HTTP.ProtoMaj, "http-proto-maj", 1, "The protocol major version to use in the HTTP request line")
-	flag.IntVar(&config.HTTP.ProtoMin, "http-proto-min", 1, "The protocol minor version to use in the HTTP request line")
+	flag.IntVar(&config.HTTP.ProtoMaj, "http-proto-maj", 1, "The protocol major version to use")
+	flag.IntVar(&config.HTTP.ProtoMin, "http-proto-min", 1, "The protocol minor version to use")
 
 	flag.IntVar(&config.HTTP.MaxSize, "http-max-size", 256, "Max kilobytes to read in response to an HTTP request")
 	flag.IntVar(&config.HTTP.MaxRedirects, "http-max-redirects", 0, "Max number of redirects to follow")
