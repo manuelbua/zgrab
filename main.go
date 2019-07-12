@@ -89,6 +89,8 @@ func init() {
 	flag.StringVar(&config.HTTP.ProtoName, "http-proto-name", "HTTP/1.1", "The protocol name to use in the HTTP request line")
 	flag.IntVar(&config.HTTP.ProtoMaj, "http-proto-maj", 1, "The protocol major version to use")
 	flag.IntVar(&config.HTTP.ProtoMin, "http-proto-min", 1, "The protocol minor version to use")
+	flag.IntVar(&config.HTTP.RequestIndex, "http-index-request", 1, "Assign a request index number as the %rindex placeholder value to use")
+	flag.IntVar(&config.HTTP.BodyIndex, "http-index-body", 1, "Assign a body index number as the %bindex placeholder value to use")
 
 	flag.IntVar(&config.HTTP.MaxSize, "http-max-size", 256, "Max kilobytes to read in response to an HTTP request")
 	flag.IntVar(&config.HTTP.MaxRedirects, "http-max-redirects", 0, "Max number of redirects to follow")
