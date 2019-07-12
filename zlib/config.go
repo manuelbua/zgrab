@@ -27,6 +27,7 @@ type HTTPConfig struct {
 	Headers                  string
 	Body					 []byte
 	HasBody					 bool
+	InjectVariables          bool
 	UserAgent                string
 	ProxyDomain              string
 	MaxSize                  int

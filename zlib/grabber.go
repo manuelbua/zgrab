@@ -22,6 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net"
 	"net/url"
 	"strconv"
@@ -338,6 +339,13 @@ func makeHTTPGrabber(config *Config, grabData *GrabData) func(string, string, st
 		if config.HTTP.HasBody {
 			// req.Body = ioutil.NopCloser(bytes.NewBuffer(config.HTTP.Body))
 			http_body = bytes.NewReader(config.HTTP.Body)
+			if config.HTTP.InjectVariables {
+				var data, _ = ioutil.ReadAll(http_body)
+				var http_body_str = string(data)
+				http_body_str = strings.Replace(http_body_str, "%s", addr, -1)
+				http_body_str = strings.Replace(http_body_str, "%d", httpHost, -1)
+				http_body = bytes.NewReader( []byte(http_body_str) )
+			}
 			// req.Body = &config.HTTP.Body
 		}
 
