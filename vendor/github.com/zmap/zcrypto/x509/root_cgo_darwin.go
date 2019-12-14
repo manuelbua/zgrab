@@ -97,7 +97,7 @@ import (
 func loadSystemRoots() (*CertPool, error) {
 	roots := NewCertPool()
 
-	var data C.CFDataRef = nil
+	var data C.CFDataRef = 0
 	err := C.ZToolsFetchPEMRoots(&data)
 	if err == -1 {
 		// TODO: better error message

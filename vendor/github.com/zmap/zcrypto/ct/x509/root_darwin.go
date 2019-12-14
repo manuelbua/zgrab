@@ -70,9 +70,10 @@ func (c *Certificate) systemVerify(opts *VerifyOptions) (chains [][]*Certificate
 func initSystemRoots() {
 	roots := NewCertPool()
 
-	var data C.CFDataRef = nil
+	var data C.CFDataRef = 0
 	err := C.FetchPEMRootsCTX509(&data)
 	if err == -1 {
+		// crypto/x509: failed to load darwin system roots with cgo
 		return
 	}
 
